@@ -1210,6 +1210,7 @@ class JSelect extends HTMLElement {
 		}
 
 		let options;
+		// FIXME: remove the map-style format option, as it won't keep the order!
 		if (!Array.isArray(obj)) { // support for map-style format { id1: text1, id2: text2, ... }
 			options = Object.entries(obj).map(([value, text]) => {
 				const selectedOption = this.#selectedOptions.find(opt => opt.value === value);
@@ -1363,8 +1364,9 @@ class JSelect extends HTMLElement {
 
 
 	#onOptionContainerClick(e) {
-		if (e.target instanceof JOption && !e.target.disabled) {
-			this.#userSelectOption(e.target);
+		const target = e.target instanceof JOption ? e.target : e.target.closest("j-option");
+		if (target != null && !target.disabled) {
+			this.#userSelectOption(target);
 
 			e.preventDefault();
 		}
